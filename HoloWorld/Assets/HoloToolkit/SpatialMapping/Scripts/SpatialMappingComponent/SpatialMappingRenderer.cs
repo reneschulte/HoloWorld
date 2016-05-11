@@ -44,13 +44,16 @@ public class SpatialMappingRenderer : SMBaseAbstract
     /// <summary>
     /// The material used to render the mesh if _currentRenderingSetting is RenderingSetting.Occlusion
     /// </summary>
-    private Material OcclusionMaterial = null;
+    public Material OcclusionMaterial = null;
 
     protected override void Start()
     {
         base.Start();
 
-        OcclusionMaterial = Resources.Load("HoloToolkit/Occlusion", typeof(Material)) as Material;
+        if (OcclusionMaterial == null)
+        {
+            OcclusionMaterial = Resources.Load("HoloToolkit/Occlusion", typeof(Material)) as Material;
+        }
 
         if (RenderingMaterial == null)
         {
