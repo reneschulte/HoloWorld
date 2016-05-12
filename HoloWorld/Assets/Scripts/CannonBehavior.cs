@@ -10,6 +10,8 @@ public class CannonBehavior : MonoBehaviour
     public float ForceMagnitude = 300f;
     public GameObject GazeCursor;
     public Material CannonMaterial;
+    public AudioSource ShootSound;
+    public AudioClip CollisionClip;
 
     void Start()
     {
@@ -21,6 +23,8 @@ public class CannonBehavior : MonoBehaviour
 
     private void GestureRecognizerOnTappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
     {
+        ShootSound.Play();
+
         var eyeball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         eyeball.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         eyeball.GetComponent<Renderer>().material = CannonMaterial;
@@ -31,6 +35,8 @@ public class CannonBehavior : MonoBehaviour
         var forward = transform.forward;
         forward = Quaternion.AngleAxis(-10, transform.right) * forward;
         rigidBody.AddForce(forward * ForceMagnitude);
+
+        eyeball.AddComponent<AudioCollisionBehaviour>().SoundSoftCrash = CollisionClip;
     }
     
     void Update()
