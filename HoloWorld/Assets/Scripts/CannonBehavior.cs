@@ -23,7 +23,12 @@ public class CannonBehavior : MonoBehaviour
 
     private void GestureRecognizerOnTappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
     {
-        ShootSound.Play();
+        Shoot();
+    }
+
+    public void Shoot()
+    {
+    //    ShootSound.Play();
 
         var eyeball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         eyeball.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
@@ -33,12 +38,12 @@ public class CannonBehavior : MonoBehaviour
         rigidBody.mass = 0.5f;
         rigidBody.position = transform.position;
         var forward = transform.forward;
-        forward = Quaternion.AngleAxis(-10, transform.right) * forward;
-        rigidBody.AddForce(forward * ForceMagnitude);
+        forward = Quaternion.AngleAxis(-10, transform.right)*forward;
+        rigidBody.AddForce(forward*ForceMagnitude);
 
         eyeball.AddComponent<AudioCollisionBehaviour>().SoundSoftCrash = CollisionClip;
     }
-    
+
     void Update()
     {
         if (GazeCursor == null) return;
@@ -48,6 +53,18 @@ public class CannonBehavior : MonoBehaviour
 
         GazeCursor.transform.position = firstHit.point;
         GazeCursor.transform.forward = firstHit.normal;
+    }
+
+    private void OnDestroy()
+    {
+        if (_gestureRecognizer != null)
+        {
+            if (_gestureRecognizer.IsCapturingGestures())
+            {
+                _gestureRecognizer.StopCapturingGestures();
+            }
+            _gestureRecognizer.Dispose();
+        }
     }
 
 }
