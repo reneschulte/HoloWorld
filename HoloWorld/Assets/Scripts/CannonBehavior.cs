@@ -1,8 +1,7 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
 using System.Linq;
-using UnityEngine.VR.WSA.Input;
+using UnityEngine.XR.WSA.Input;
 
 public class CannonBehavior : MonoBehaviour
 {
@@ -17,18 +16,18 @@ public class CannonBehavior : MonoBehaviour
     void Start()
     {
         _gestureRecognizer = new GestureRecognizer();
-        _gestureRecognizer.TappedEvent += GestureRecognizerOnTappedEvent;
-        _gestureRecognizer.NavigationUpdatedEvent += GestureRecognizerOnNavigationUpdatedEvent;
+        _gestureRecognizer.Tapped += GestureRecognizerOnTappedEvent;
+        _gestureRecognizer.NavigationUpdated += GestureRecognizerOnNavigationUpdatedEvent;
         _gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap | GestureSettings.NavigationX | GestureSettings.NavigationY | GestureSettings.NavigationZ);
         _gestureRecognizer.StartCapturingGestures();
     }
 
-    private void GestureRecognizerOnNavigationUpdatedEvent(InteractionSourceKind source, Vector3 normalizedOffset, Ray headRay)
+    private void GestureRecognizerOnNavigationUpdatedEvent(NavigationUpdatedEventArgs args)
     {
-        Debug.LogFormat("Nav Upd: {0} Offset: {1}", Enum.GetName(typeof(InteractionSourceKind), source), normalizedOffset);
+        Debug.LogFormat("Nav Upd: {0} Offset: {1}", Enum.GetName(typeof(InteractionSourceKind), args.source.kind), args.normalizedOffset);
     }
 
-    private void GestureRecognizerOnTappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
+    private void GestureRecognizerOnTappedEvent(TappedEventArgs args)
     {
         Shoot();
     }
