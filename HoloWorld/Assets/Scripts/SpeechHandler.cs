@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Windows.Speech;
+using UnityEngine.XR.WSA;
 
 public class SpeechHandler : MonoBehaviour
 {
@@ -11,13 +12,15 @@ public class SpeechHandler : MonoBehaviour
     public CannonBehavior Cannon;
 
     public string ResetSceneCmd = "reset scene";
-    
+
+    public string ToggleMapCmd = "toggle spatial map";
+    public SpatialMappingRenderer SpatialMap;
 
     private KeywordRecognizer _keywordRecognizer;
 
     void Start()
     {
-        _keywordRecognizer = new KeywordRecognizer(new[] { HidePlaneCmd, ResetSceneCmd, ShootCmd });
+        _keywordRecognizer = new KeywordRecognizer(new[] { HidePlaneCmd, ResetSceneCmd, ShootCmd, ToggleMapCmd });
         _keywordRecognizer.OnPhraseRecognized += KeywordRecognizer_OnPhraseRecognized;
         _keywordRecognizer.Start();
     }
@@ -36,6 +39,13 @@ public class SpeechHandler : MonoBehaviour
         else if (cmd == ResetSceneCmd)
         {
             SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
+        }
+        else if (cmd == ToggleMapCmd)
+        {
+            SpatialMap.renderState = 
+                SpatialMap.renderState == SpatialMappingRenderer.RenderState.Occlusion 
+                ? SpatialMappingRenderer.RenderState.Visualization 
+                : SpatialMappingRenderer.RenderState.Occlusion;
         }
     }
 
